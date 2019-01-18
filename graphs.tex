@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,12pt,dvipsnames]{article}
 \usepackage[utf8x]{inputenc}
 
 \usepackage[frenchb]{babel}
@@ -27,6 +27,25 @@ breaklines,
 }
 
 \usepackage{fullpage}
+
+
+%from SO: kinky cross for wires
+\tikzset{
+  declare function={% in case of CVS which switches the arguments of atan2
+    atan3(\a,\b)=ifthenelse(atan2(0,1)==90, atan2(\a,\b), atan2(\b,\a));},
+  kinky cross radius/.initial=+.125cm,
+  @kinky cross/.initial=+, kinky crosses/.is choice,
+  kinky crosses/left/.style={@kinky cross=-},kinky crosses/right/.style={@kinky cross=+},
+  kinky cross/.style args={(#1)--(#2)}{
+    to path={
+      let \p{@kc@}=($(\tikztotarget)-(\tikztostart)$),
+          \n{@kc@}={atan3(\p{@kc@})+180} in
+      -- ($(intersection of \tikztostart--{\tikztotarget} and #1--#2)!%
+             \pgfkeysvalueof{/tikz/kinky cross radius}!(\tikztostart)$)
+      arc [ radius     =\pgfkeysvalueof{/tikz/kinky cross radius},
+            start angle=\n{@kc@},
+            delta angle=\pgfkeysvalueof{/tikz/@kinky cross}180 ]
+      -- (\tikztotarget)}}}
 
 
 
@@ -483,6 +502,100 @@ breaklines,
 
 
 
+\subsection{Common source simple}
+\begin{center}
+\ctikzset{tripoles/mos style/arrows}
+\begin{circuitikz}[scale=0.8]\draw
+	(0,0) to [V=$e(t)$] (0,2)
+	(0,2) to [short] (1,2)
+	(0,0) to (1,0)
+	(1,2) to [open, v^<=$V_{GS}$](1,0)
+	(1,0) to [short, o-] (2,0)
+	(3,2) node[nigfete ] (mos) {}
+	(3,0) to [short] (mos.S)
+	(1,2) to [short] (mos.G)
+	(2,0) to (3,0)
+	(mos.D) to [short, i<=$I_D$](3,3)
+	(3,3) to [R,l=$R_D$ ] (3,5)
+	(3,5) to (4,5)
+	(2,0) -- (5,0)
+	(5,5) -- (3,5)
+	(5,5) to [battery, l=$12V$] (5,0)
+	(3,0) node[ground] {}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\ctikzset{tripoles/mos style/arrows}
+		\begin{circuitikz}[scale=0.8]\draw
+			(0,0) to [V=$e(t)$] (0,2)
+			(0,2) to [short] (1,2)
+			(0,0) to (1,0)
+			(1,2) to [open, v^<=$V_{GS}$](1,0)
+			(1,0) to [short, o-] (2,0)
+			(3,2) node[nigfete ] (mos) {}
+			(3,0) to [short] (mos.S)
+			(1,2) to [short] (mos.G)
+			(2,0) to (3,0)
+			(mos.D) to [short, i<=$I_D$](3,3)
+			(3,3) to [R,l=$R_D$ ] (3,5)
+			(3,5) to (4,5)
+			(2,0) -- (5,0)
+			(5,5) -- (3,5)
+			(5,5) to [battery, l=$12V$] (5,0)
+			(3,0) node[ground] {}
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Common source simple with $v_{out}$}
+
+\begin{center}
+\begin{circuitikz}[scale=0.8] \draw
+	(0,0) to [sV=$e(t)$] (0,2)
+	(0,2) to [short] (1,2)
+	(0,0) to (1,0)
+	(1,2) to [open, v^<=$v_{in}$](1,0)
+	(1,0) to [short, o-] (2,0)
+	(3,2) node[nigfete ] (mos) {}
+	(mos.S) to [short] (3,0)
+	(1,2) to [short] (mos.G)
+	(2,0) to (3,0)
+	(mos.D) to [short](3,3) %, i<=$I_D$
+	(3,3) to [R, l=$330\ohm$] (3,5)
+	(3,3) to [short, -o](4,3)
+	(4,3) node[anchor=west] {$v_{out}$}
+	(3,5) node[rground, yscale=-1] (alim) {}
+	(3,5.7) node {+12V}
+	(3,0) node[ground] {}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz}[scale=0.8] \draw
+	(0,0) to [sV=$e(t)$] (0,2)
+	(0,2) to [short] (1,2)
+	(0,0) to (1,0)
+	(1,2) to [open, v^<=$v_{in}$](1,0)
+	(1,0) to [short, o-] (2,0)
+	(3,2) node[nigfete ] (mos) {}
+	(mos.S) to [short] (3,0)
+	(1,2) to [short] (mos.G)
+	(2,0) to (3,0)
+	(mos.D) to [short](3,3) %, i<=$I_D$
+	(3,3) to [R, l=$330\ohm$] (3,5)
+	(3,3) to [short, -o](4,3)
+	(4,3) node[anchor=west] {$v_{out}$}
+	(3,5) node[rground, yscale=-1] (alim) {}
+	(3,5.7) node {+12V}
+	(3,0) node[ground] {}
+;\end{circuitikz}
+\end{minted}
+
+
+
+
+
 
 
 
@@ -807,6 +920,564 @@ breaklines,
 
 
 
+
+
+
+
+\section{Logic}
+
+\subsection{Gates}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0) node [american nand port]{}
+	(-0.7,-0.8) node  {NAND}
+
+	(2,0) node [american nor port] {}
+	(2-0.7,-0.8) node  {NOR}
+
+	(4,0) node [american xnor port] {}
+	(4-0.7,-0.8) node  {XNOR}
+
+	(0,2) node [american and port] {}
+	(-0.7,2-0.8) node  {AND}
+
+	(2,2) node [american or port] {}
+	(2-0.7,2-0.8) node  {OR}
+
+	(4,2) node [american xor port] {}
+	(4-0.7,2-0.8) node  {XOR}
+
+	(6,1) node [american not port] {}
+	(6.7-0.7,1-0.8) node  {NOT}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0) node [american nand port]{}
+			(-0.7,-0.8) node  {NAND}
+
+			(2,0) node [american nor port] {}
+			(2-0.7,-0.8) node  {NOR}
+
+			(4,0) node [american xnor port] {}
+			(4-0.7,-0.8) node  {XNOR}
+
+			(0,2) node [american and port] {}
+			(-0.7,2-0.8) node  {AND}
+
+			(2,2) node [american or port] {}
+			(2-0.7,2-0.8) node  {OR}
+
+			(4,2) node [american xor port] {}
+			(4-0.7,2-0.8) node  {XOR}
+
+			(6,1) node [american not port] {}
+			(6.7-0.7,1-0.8) node  {NOT}
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Circuit 1}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0) node [american nor port] (nor) {}
+	(nor.in 2) -- ++(-1,0) node [ocirc] {} node [anchor=east] {C}
+	(nor.in 1) -|  (-1.5,1)
+	(0,2) node [american and port] (and){}
+	(and.in 2) -| (-1.5,1) to [short, -o] (-2.4,1) node [anchor=east] {B}
+	(and.in 1)	-- ++(-1,0) node [ocirc] {} node [anchor=east] {A}
+	(2,1) node [american or port] (or){}
+	(and.out) -| (or.in 1)
+	(nor.out) -| (or.in 2)
+	(3.5,1) node [american not port] (not){}
+	(or.out) -- (not.in)
+	(not.out) -- ++(1,0) node [ocirc] {} node [anchor=west] {X}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0) node [american nor port] (nor) {}
+			(nor.in 2) -- ++(-1,0) node [ocirc] {} node [anchor=east] {C}
+			(nor.in 1) -|  (-1.5,1)
+			(0,2) node [american and port] (and){}
+			(and.in 2) -| (-1.5,1) to [short, -o] (-2.4,1) node [anchor=east] {B}
+			(and.in 1)	-- ++(-1,0) node [ocirc] {} node [anchor=east] {A}
+			(2,1) node [american or port] (or){}
+			(and.out) -| (or.in 1)
+			(nor.out) -| (or.in 2)
+			(3.5,1) node [american not port] (not){}
+			(or.out) -- (not.in)
+			(not.out) -- ++(1,0) node [ocirc] {} node [anchor=west] {X}
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Voter}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0) node [american and port] (and1) {}
+	(and1.in 2) -- ++(-0.5,0) |- node [circ] {} ++(-0.5,2.56) node [ocirc] (B) {} node [anchor=east] {B}
+	(0,2) node [american or port] (or){}
+	(or.in 1) -- ++(-0.5,0) |- (B)
+	(or.in 2) |- node [circ] {} ++(-1,-0.4) node [ocirc] (C) {} node [anchor=east] {C}
+	(and1.in 1) |- (C)
+	(2,3) node [american and port] (and2) {}
+	(or.out) -| (and2.in 2)
+	(and2.in 1) -- ++(-3,0)  node [ocirc] (A) {} node [anchor=east] {A}
+	(or.out) -| (and2.in 2)
+	(3.5,1) node [american or port] (and3){}
+	(and2.out) -| (and3.in 1)
+	(and1.out) -| (and3.in 2)
+	(and3.out) -- ++(1,0) node [ocirc] {} node [anchor=west] {Y}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0) node [american and port] (and1) {}
+			(and1.in 2) -- ++(-0.5,0) |- node [circ] {} ++(-0.5,2.56) node [ocirc] (B) {} node [anchor=east] {B}
+			(0,2) node [american or port] (or){}
+			(or.in 1) -- ++(-0.5,0) |- (B)
+			(or.in 2) |- node [circ] {} ++(-1,-0.4) node [ocirc] (C) {} node [anchor=east] {C}
+			(and1.in 1) |- (C)
+			(2,3) node [american and port] (and2) {}
+			(or.out) -| (and2.in 2)
+			(and2.in 1) -- ++(-3,0)  node [ocirc] (A) {} node [anchor=east] {A}
+			(or.out) -| (and2.in 2)
+			(3.5,1) node [american or port] (and3){}
+			(and2.out) -| (and3.in 1)
+			(and1.out) -| (and3.in 2)
+			(and3.out) -- ++(1,0) node [ocirc] {} node [anchor=west] {Y}
+		;\end{circuitikz}
+\end{minted}
+
+
+
+\subsection{Circuit 2}
+
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0.72) node [american and port] (and1) {}
+	(-3,1) node [american not port, scale=0.8] (not){}
+	(and1.in 1) -|   (not.out)
+	(not.in) |-  ++(-0.5,0) node [ocirc] (A) {} node [anchor=east] {A}
+	(and1.in 2) |- ++(-2.66,0) node [ocirc] (B) {} node [anchor=east] {B}
+	(and1.out) -- ++(1,0) node [ocirc] (Y) {} node [anchor=west] {Y}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0.72) node [american and port] (and1) {}
+			(-3,1) node [american not port, scale=0.8] (not){}
+			(and1.in 1) -|   (not.out)
+			(not.in) |-  ++(-0.5,0) node [ocirc] (A) {} node [anchor=east] {A}
+			(and1.in 2) |- ++(-2.66,0) node [ocirc] (B) {} node [anchor=east] {B}
+			(and1.out) -- ++(1,0) node [ocirc] (Y) {} node [anchor=west] {Y}
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Bistable}
+
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0) node [american not port] (not3) {}
+	(2,0) node [american not port] (not4) {}
+	(not3.out) -- (not4.in)
+	(not4.out) -- ++(0.5,0) |- ++(-4,-1) |- (not3.in)
+	(not3.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$\overline{Q}$}
+	(not4.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$Q$}
+
+	(8,1) node [american not port] (not1) {}
+	(8,-1) node [american not port] (not2) {}
+	(not1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(not2.in)  ++(-1,0.5)  coordinate (a-b)
+
+	(not1.in)++(-1.27,-0.5) node (in) {} % end of the wire with kinky bump
+	(not2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(not1.in)-| ++(-1.14,-0.55)
+	(not2.out) -- ++(1,0) node [circ] () {} node [anchor=south] {$\overline{Q}$}
+
+	(not1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1) |- (not2.in)
+	(not1.out) -- ++(1,0) node [circ] () {} node [anchor=south] {$Q$}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,0) node [american not port] (not3) {}
+	(2,0) node [american not port] (not4) {}
+	(not3.out) -- (not4.in)
+	(not4.out) -- ++(0.5,0) |- ++(-4,-1) |- (not3.in)
+	(not3.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$\overline{Q}$}
+	(not4.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$Q$}
+
+	(8,1) node [american not port] (not1) {}
+	(8,-1) node [american not port] (not2) {}
+	(not1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(not2.in)  ++(-1,0.5)  coordinate (a-b)
+
+	(not1.in)++(-1.27,-0.5) node (in) {} % end of the wire with kinky bump
+	(not2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(not1.in)-| ++(-1.14,-0.55)
+	(not2.out) -- ++(1,0) node [circ] () {} node [anchor=south] {$\overline{Q}$}
+
+	(not1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1) |- (not2.in)
+	(not1.out) -- ++(1,0) node [circ] () {} node [anchor=south] {$Q$}
+;\end{circuitikz}
+\end{minted}
+
+
+
+\subsection{Enable}
+
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0) node [american not port] (not1) {}
+	(not1)+(0,.25) |- ++(-1.7,1) node [ocirc] () {} node [anchor=south] {$B$}
+	(not1.in) -- ++(-1,0) node [ocirc] () {} node [anchor=south] {$A$}
+	(not1.out) -- ++(1,0) node [ocirc] () {} node [anchor=south] {$Q$}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,0) node [american not port] (not1) {}
+	(not1)+(0,.25) |- ++(-1.7,1) node [ocirc] () {} node [anchor=south] {$B$}
+	(not1.in) -- ++(-1,0) node [ocirc] () {} node [anchor=south] {$A$}
+	(not1.out) -- ++(1,0) node [ocirc] () {} node [anchor=south] {$Q$}
+;\end{circuitikz}
+\end{minted}
+
+
+
+\subsection{Bistable with enable}
+
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0) node [american not port] (not3) {}
+	(not3)+(0,.25) |- ++(-0.7,1) node [ocirc] () {} node [anchor=south] {$B1$}
+	(2,0) node [american not port] (not4) {}
+	(not4)+(0,.25) |- ++(-0.7,1) node [ocirc] () {} node [anchor=south] {$B2$}
+	(not3.out) -- (not4.in)
+	(not4.out) -- ++(0.5,0) |- ++(-4,-1) |- (not3.in)
+	(not3.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$\overline{Q}$}
+	(not4.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$Q$}
+
+	(8,1) node [american not port] (not1) {}
+	(not1)+(0,0.25) |- ++(-0.7,1) node [ocirc] () {} node [anchor=south] {$B2$}
+	(8,-1) node [american not port] (not2) {}
+	(not2)+(0,-0.25) |- ++(-0.7,-1) node [ocirc] () {} node [anchor=north] {$B1$}
+	(not1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(not2.in)  ++(-1,0.5)  coordinate (a-b)
+
+	(not1.in)++(-1.27,-0.5) node (in) {} % end of the wire with kinky bump
+	(not2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(not1.in)-| ++(-1.14,-0.55)
+	(not2.out) -- ++(1,0) node [ocirc] () {} node [anchor=south] {$\overline{Q}$}
+
+	(not1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1) |- (not2.in)
+	(not1.out) -- ++(1,0) node [ocirc] () {} node [anchor=south] {$Q$}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,0) node [american not port] (not3) {}
+	(not3)+(0,.25) |- ++(-0.7,1) node [ocirc] () {} node [anchor=south] {$B1$}
+	(2,0) node [american not port] (not4) {}
+	(not4)+(0,.25) |- ++(-0.7,1) node [ocirc] () {} node [anchor=south] {$B2$}
+	(not3.out) -- (not4.in)
+	(not4.out) -- ++(0.5,0) |- ++(-4,-1) |- (not3.in)
+	(not3.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$\overline{Q}$}
+	(not4.out) |-  ++(0.25,0) node [circ] () {} node [anchor=south] {$Q$}
+
+	(8,1) node [american not port] (not1) {}
+	(not1)+(0,0.25) |- ++(-0.7,1) node [ocirc] () {} node [anchor=south] {$B2$}
+	(8,-1) node [american not port] (not2) {}
+	(not2)+(0,-0.25) |- ++(-0.7,-1) node [ocirc] () {} node [anchor=north] {$B1$}
+	(not1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(not2.in)  ++(-1,0.5)  coordinate (a-b)
+
+	(not1.in)++(-1.27,-0.5) node (in) {} % end of the wire with kinky bump
+	(not2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(not1.in)-| ++(-1.14,-0.55)
+	(not2.out) -- ++(1,0) node [ocirc] () {} node [anchor=south] {$\overline{Q}$}
+
+	(not1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1) |- (not2.in)
+	(not1.out) -- ++(1,0) node [ocirc] () {} node [anchor=south] {$Q$}
+;\end{circuitikz}
+\end{minted}
+
+
+
+\subsection{NOR}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0) node [american nor port] (nor) {}
+	(nor.in 1) -- ++(-1,0) node [ocirc] () {} node [anchor=east] {$A$}
+	(nor.in 2) -- ++(-1,0) node [ocirc] () {} node [anchor=east] {$B$}
+	(nor.out) -- ++(1,0) node [ocirc] () {} node [anchor=west] {$Q$}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,0) node [american nor port] (nor) {}
+	(nor.in 1) -- ++(-1,0) node [ocirc] () {} node [anchor=east] {$A$}
+	(nor.in 2) -- ++(-1,0) node [ocirc] () {} node [anchor=east] {$B$}
+	(nor.out) -- ++(1,0) node [ocirc] () {} node [anchor=west] {$Q$}
+;\end{circuitikz}
+\end{minted}
+
+
+
+
+
+\subsection{SR using NOR}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,1) node [american nor port] (nor1) {}
+	(0,-1.5) node [american nor port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+	(nor1.out) |-  ++(0.25,0)
+
+	(nor1.in 1) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$S$}
+	(nor2.in 2) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$R$}
+;\draw [dashed](-2.75,-2.25) rectangle (1,1.75);
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,1) node [american nor port] (nor1) {}
+	(0,-1.5) node [american nor port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+	(nor1.out) |-  ++(0.25,0)
+
+	(nor1.in 1) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$S$}
+	(nor2.in 2) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$R$}
+;\draw [dashed](-2.75,-2.25) rectangle (1,1.75);
+\end{circuitikz}
+\end{minted}
+
+
+
+\subsection{SR using NAND}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,1) node [american nand port] (nor1) {}
+	(0,-1.5) node [american nand port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+	(nor1.out) |-  ++(0.25,0)
+
+	(nor1.in 1) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$\overline{S}$}
+	(nor2.in 2) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$\overline{R}$}
+;
+\draw [dashed](-2.75,-2.25) rectangle (1,1.75);
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,1) node [american nand port] (nor1) {}
+	(0,-1.5) node [american nand port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+	(nor1.out) |-  ++(0.25,0)
+
+	(nor1.in 1) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$\overline{S}$}
+	(nor2.in 2) -- ++(-2,0) node [ocirc] () {} node [anchor=east] {$\overline{R}$}
+;
+\draw [dashed](-2.75,-2.25) rectangle (1,1.75);
+\end{circuitikz}
+\end{minted}
+
+
+
+
+\subsection{SR with NAND and enable}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,1.28) node [american nand port] (nand1) {}
+	(0,-1.5-0.28) node [american nand port] (nand2) {}
+
+	(nand1.in 1) -- ++(-1.5,0) node [ocirc] () {} node [anchor=east] {$S$}
+	(nand2.in 2) -- ++(-1.5,0) node [ocirc] () {} node [anchor=east] {$R$}
+
+	(nand1.in 2) |- ++(-1.5,-1.28) coordinate (dot) node [ocirc] () {} node [anchor=east] {$E$}
+	(nand2.in 1) |- (dot)
+
+	(3,1) node [american nand port] (nor1) {}
+	(3,-1.5) node [american nand port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+	(nor1.out) |-  ++(0.25,0)
+	(nor1.in 1) -| (nand1.out)
+	(nor2.in 2) -| (nand2.out)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,1.28) node [american nand port] (nand1) {}
+	(0,-1.5-0.28) node [american nand port] (nand2) {}
+
+	(nand1.in 1) -- ++(-1.5,0) node [ocirc] () {} node [anchor=east] {$S$}
+	(nand2.in 2) -- ++(-1.5,0) node [ocirc] () {} node [anchor=east] {$R$}
+
+	(nand1.in 2) |- ++(-1.5,-1.28) coordinate (dot) node [ocirc] () {} node [anchor=east] {$E$}
+	(nand2.in 1) |- (dot)
+
+	(3,1) node [american nand port] (nor1) {}
+	(3,-1.5) node [american nand port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+	(nor1.out) |-  ++(0.25,0)
+	(nor1.in 1) -| (nand1.out)
+	(nor2.in 2) -| (nand2.out)
+;\end{circuitikz}
+\end{minted}
+
+
+
+
+\subsection{D latch}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,1.28) node [american nand port] (nand1) {}
+	(0,-1.5-0.28) node [american nand port] (nand2) {}
+
+	(nand1.in 1) -- ++(-2.5,0) node [ocirc] (D) {} node [anchor=east] {$D$}
+	(-2.25,-2.07) node [american not port] (not) {}
+	(D) -| (not.in)
+	(not.out) --	(nand2.in 2)
+	(D)++(0.94,0) coordinate (Dvert) %pour avoir seulement le segment vertical pour calculer l'intersection
+	(nand1.in 2) |- ++(-1.25,-1.28) coordinate (dot)
+	(dot) to [kinky cross=(Dvert)--(not.in), kinky crosses=left] ++(-1.25,0)node [ocirc] () {} node [anchor=east] {$E$}
+	(nand2.in 1) |- (dot)
+
+	(3,1) node [american nand port] (nor1) {}
+	(3,-1.5) node [american nand port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+	(nor1.out) |-  ++(0.25,0)
+	(nor1.in 1) -| (nand1.out)
+	(nor2.in 2) -| (nand2.out)
+
+;\draw [dashed](-3.5,-3.25) rectangle (4.25,2.75);
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw
+	(0,1.28) node [american nand port] (nand1) {}
+	(0,-1.5-0.28) node [american nand port] (nand2) {}
+
+	(nand1.in 1) -- ++(-2.5,0) node [ocirc] (D) {} node [anchor=east] {$D$}
+	(-2.25,-2.07) node [american not port] (not) {}
+	(D) -| (not.in)
+	(not.out) --	(nand2.in 2)
+	(D)++(0.94,0) coordinate (Dvert) %pour avoir seulement le segment vertical pour calculer l'intersection
+	(nand1.in 2) |- ++(-1.25,-1.28) coordinate (dot)
+	(dot) to [kinky cross=(Dvert)--(not.in), kinky crosses=left] ++(-1.25,0)node [ocirc] () {} node [anchor=east] {$E$}
+	(nand2.in 1) |- (dot)
+
+	(3,1) node [american nand port] (nor1) {}
+	(3,-1.5) node [american nand port] (nor2) {}
+	(nor1.out)  ++(0.5,-0.5)  coordinate (a-a) %coords of the crossing wire
+	(nor2.in 2)  ++(-1.5,0.5)  coordinate (a-b)
+
+	(nor1.in 2)++(-1.135,-0.225) node (in) {} % end of the wire with kinky bump
+	(nor2.out)-| ++(0.5,0.5) to  [kinky cross=(a-a)--(a-b), kinky crosses=left] (in)
+	(nor1.in 2)-| ++(-1,-0.3)
+	(nor1.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$Q$}
+
+	(nor1.out) -| ++(0.5,-0.5) -- ++(-3.043,-1.5) |- (nor2.in 1)
+	(nor2.out) -- ++(1.5,0) node [ocirc] () {} node [anchor=west] {$\overline{Q}$}
+	(nor1.out) |-  ++(0.25,0)
+	(nor1.in 1) -| (nand1.out)
+	(nor2.in 2) -| (nand2.out)
+
+;\draw [dashed](-3.5,-3.25) rectangle (4.25,2.75);
+\end{circuitikz}
+\end{minted}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Graphs}
 \subsection{Logarithmic axis}
 
@@ -1060,7 +1731,7 @@ breaklines,
 
 
 
-\subsection{}
+\subsection{$V_{out}(I_{out})$}
 \begin{center}
 \begin{tikzpicture}
 	\begin{axis}[ %title ={4Hz Sine  Wave},
@@ -1180,6 +1851,390 @@ breaklines,
 		% A very minimal introduction to TikZ, by Jacques Cremer
 		\end{tikzpicture}
 \end{minted}
+
+
+\subsection{Time graph 1}
+
+\begin{center}
+\begin{tikzpicture}[minimum size= 1.25cm,scale=0.9]
+\usetikzlibrary{calc}
+{
+	\draw   [->]  (0,0) -- (0,1);
+	\node [anchor=east] at (0,1) {A};
+	\draw [->]( 0,0) -- (10.5,0);
+	\node [anchor=west] at (10.5,0) {t};
+
+	\foreach \x in {1,2,...,10} \draw (\x,-0.1) -- (\x,0.1);
+	\foreach \x in {1,2,...,10} \draw (\x,-0.1-2) -- (\x,0.1-2);
+	\foreach \x in {1,2,...,10} \draw (\x,-0.1-4) -- (\x,0.1-4);
+	\node [anchor=north, inner sep=0pt, outer sep=0pt] at (1,0.25) {10ns};
+	\node [anchor=north, inner sep=0pt, outer sep=0pt] at (2,0.25) {20ns};
+
+	\draw [->] (0,-2) -- (0,1-2);
+	\node [anchor=east] at (0,1-2) {B};
+	\draw [->] (0,-2) -- (10.5,-2);
+	\node [anchor=west] at (10.5,-2) {t};
+
+	\draw [->] (0,-4) -- (0,1-4);
+	\node [anchor=east] at (0,1-4) {Y};
+	\draw [->] (0,-4) -- (10.5,-4);
+	\node [anchor=west] at (10.5,-4) {t};
+
+	\draw [line width=2pt] (0,0) -|(3,1) -| (10,1); %A
+	\draw [line width=2pt] (0,0-2) -|(1,1-2) -| (5,0-2) -- (10,0-2); %B
+
+	\draw [line width=2pt] (0,-4) -| (3,1-4) -|(6,0-4)--(10,0-4); %Y
+}
+\end{tikzpicture}
+\end{center}
+
+\begin{minted}{latex}
+\usetikzlibrary{calc}
+{
+	\draw   [->]  (0,0) -- (0,1);
+	\node [anchor=east] at (0,1) {A};
+	\draw [->]( 0,0) -- (10.5,0);
+	\node [anchor=west] at (10.5,0) {t};
+	
+	\foreach \x in {1,2,...,10} \draw (\x,-0.1) -- (\x,0.1);
+	\foreach \x in {1,2,...,10} \draw (\x,-0.1-2) -- (\x,0.1-2);
+	\foreach \x in {1,2,...,10} \draw (\x,-0.1-4) -- (\x,0.1-4);
+	\node [anchor=north, inner sep=0pt, outer sep=0pt] at (1,0.25) {10ns};
+	\node [anchor=north, inner sep=0pt, outer sep=0pt] at (2,0.25) {20ns};
+
+	\draw [->] (0,-2) -- (0,1-2);
+	\node [anchor=east] at (0,1-2) {B};
+	\draw [->] (0,-2) -- (10.5,-2);
+	\node [anchor=west] at (10.5,-2) {t};
+
+	\draw [->] (0,-4) -- (0,1-4);
+	\node [anchor=east] at (0,1-4) {Y};
+	\draw [->] (0,-4) -- (10.5,-4);
+	\node [anchor=west] at (10.5,-4) {t};
+
+	\draw [line width=2pt] (0,0) -|(3,1) -| (10,1); %A
+	\draw [line width=2pt] (0,0-2) -|(1,1-2) -| (5,0-2) -- (10,0-2); %B
+
+	\draw [line width=2pt] (0,-4) -| (3,1-4) -|(6,0-4)--(10,0-4); %Y
+}
+\end{tikzpicture}
+\end{minted}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Miscellaneous}
+
+\subsection{74HC00}
+
+\begin{center}
+\begin{circuitikz}[scale=0.8] \draw
+	(4,2.5) node [anchor=center] {$74HC00, 4\cdot NAND$}
+	(2.8,1.5) node [american nand port,scale=0.8] (nand1) {}
+	(1,0) node (in11) {}
+	(2,0) node (in12) {}
+	(3,0) node (out1) {}
+	(in11) |- (nand1.in 1)
+	(in12) |- ++(-0.6,0.75)|- (nand1.in 2)
+	(out1) |- (nand1.out)
+
+	(2.8+3,1.5) node [american nand port,scale=0.8] (nand2) {}
+	(1+3,0) node (in21) {}
+	(2+3,0) node (in22) {}
+	(3+3,0) node (out2) {}
+	(in21) |- (nand2.in 1)
+	(in22) |- ++(-0.6,0.75)|- (nand2.in 2)
+	(out2) |- (nand2.out)
+
+
+	(1+2.8,5-1.5) node [american nand port,scale=0.8] (nand3) {}
+	(1+1,5) node (in31) {}
+	(2+1,5) node (in32) {}
+	(3+1,5) node (out3) {}
+	(in31) |- (nand3.in 2)
+	(in32) |- ++(-0.6,-0.75)|- (nand3.in 1)
+	(out3) |- (nand3.out)
+
+	(1+2.8+3,5-1.5) node [american nand port,scale=0.8] (nand4) {}
+	(2+3,5) node (in41) {}
+	(3+3,5) node (in42) {}
+	(4+3,5) node (out4) {}
+	(in41) |- (nand4.in 2)
+	(in42) |- ++(-0.6,-0.75)|- (nand4.in 1)
+	(out4) |- (nand4.out)
+
+	(7,0-0.25) node [anchor=north](gnd) {GND}
+	(1,5+0.35) node [anchor=south](vcc) {VCC}
+
+;\draw (0,0)rectangle (8,5);
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,-0.15) rectangle (\x+0.25,0.35) (\x,0.1) node {\x};
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,5-0.15) rectangle (\x+0.25,5+0.35);
+\foreach \x in {8,9,...,14} \draw (15-\x,5+0.1) node {\x};
+\draw (0,2) arc[start angle=-90, end angle=90, radius=0.5];
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz}[scale=0.8] \draw
+	(4,2.5) node [anchor=center] {$74HC00, 4\cdot NAND$}
+	(2.8,1.5) node [american nand port,scale=0.8] (nand1) {}
+	(1,0) node (in11) {}
+	(2,0) node (in12) {}
+	(3,0) node (out1) {}
+	(in11) |- (nand1.in 1)
+	(in12) |- ++(-0.6,0.75)|- (nand1.in 2)
+	(out1) |- (nand1.out)
+
+	(2.8+3,1.5) node [american nand port,scale=0.8] (nand2) {}
+	(1+3,0) node (in21) {}
+	(2+3,0) node (in22) {}
+	(3+3,0) node (out2) {}
+	(in21) |- (nand2.in 1)
+	(in22) |- ++(-0.6,0.75)|- (nand2.in 2)
+	(out2) |- (nand2.out)
+
+
+	(1+2.8,5-1.5) node [american nand port,scale=0.8] (nand3) {}
+	(1+1,5) node (in31) {}
+	(2+1,5) node (in32) {}
+	(3+1,5) node (out3) {}
+	(in31) |- (nand3.in 2)
+	(in32) |- ++(-0.6,-0.75)|- (nand3.in 1)
+	(out3) |- (nand3.out)
+
+	(1+2.8+3,5-1.5) node [american nand port,scale=0.8] (nand4) {}
+	(2+3,5) node (in41) {}
+	(3+3,5) node (in42) {}
+	(4+3,5) node (out4) {}
+	(in41) |- (nand4.in 2)
+	(in42) |- ++(-0.6,-0.75)|- (nand4.in 1)
+	(out4) |- (nand4.out)
+
+	(7,0-0.25) node [anchor=north](gnd) {GND}
+	(1,5+0.35) node [anchor=south](vcc) {VCC}
+
+;\draw (0,0)rectangle (8,5);
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,-0.15) rectangle (\x+0.25,0.35) (\x,0.1) node {\x};
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,5-0.15) rectangle (\x+0.25,5+0.35);
+\foreach \x in {8,9,...,14} \draw (15-\x,5+0.1) node {\x};
+\draw (0,2) arc[start angle=-90, end angle=90, radius=0.5];
+\end{circuitikz}
+\end{minted}
+
+
+
+\subsection{74HC32}
+\begin{center}
+\begin{circuitikz}[scale=0.8] \draw
+	(4,2.5) node [anchor=center] {$74HC32, 4\cdot  OR$}
+	(2.8,1.5) node [american or port,scale=0.8] (or1) {}
+	(1,0) node (in11) {}
+	(2,0) node (in12) {}
+	(3,0) node (out1) {}
+	(in11) |- (or1.in 1)
+	(in12) |- ++(-0.6,0.75)|- (or1.in 2)
+	(out1) |- (or1.out)
+
+	(2.8+3,1.5) node [american or port,scale=0.8] (or2) {}
+	(1+3,0) node (in21) {}
+	(2+3,0) node (in22) {}
+	(3+3,0) node (out2) {}
+	(in21) |- (or2.in 1)
+	(in22) |- ++(-0.6,0.75)|- (or2.in 2)
+	(out2) |- (or2.out)
+
+
+	(1+2.8,5-1.5) node [american or port,scale=0.8] (or3) {}
+	(1+1,5) node (in31) {}
+	(2+1,5) node (in32) {}
+	(3+1,5) node (out3) {}
+	(in31) |- (or3.in 2)
+	(in32) |- ++(-0.6,-0.75)|- (or3.in 1)
+	(out3) |- (or3.out)
+
+	(1+2.8+3,5-1.5) node [american or port,scale=0.8] (or4) {}
+	(2+3,5) node (in41) {}
+	(3+3,5) node (in42) {}
+	(4+3,5) node (out4) {}
+	(in41) |- (or4.in 2)
+	(in42) |- ++(-0.6,-0.75)|- (or4.in 1)
+	(out4) |- (or4.out)
+
+	(7,0-0.25) node [anchor=north](gnd) {GND}
+	(1,5+0.35) node [anchor=south](vcc) {VCC}
+
+;
+\draw (0,0)rectangle (8,5);
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,-0.15) rectangle (\x+0.25,0.35) (\x,0.1) node {\x};
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,5-0.15) rectangle (\x+0.25,5+0.35);
+\foreach \x in {8,9,...,14} \draw (15-\x,5+0.1) node {\x};
+\draw (0,2) arc[start angle=-90, end angle=90, radius=0.5];
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz}[scale=0.8] \draw
+	(4,2.5) node [anchor=center] {$74HC32, 4\cdot  OR$}
+	(2.8,1.5) node [american or port,scale=0.8] (or1) {}
+	(1,0) node (in11) {}
+	(2,0) node (in12) {}
+	(3,0) node (out1) {}
+	(in11) |- (or1.in 1)
+	(in12) |- ++(-0.6,0.75)|- (or1.in 2)
+	(out1) |- (or1.out)
+
+	(2.8+3,1.5) node [american or port,scale=0.8] (or2) {}
+	(1+3,0) node (in21) {}
+	(2+3,0) node (in22) {}
+	(3+3,0) node (out2) {}
+	(in21) |- (or2.in 1)
+	(in22) |- ++(-0.6,0.75)|- (or2.in 2)
+	(out2) |- (or2.out)
+
+
+	(1+2.8,5-1.5) node [american or port,scale=0.8] (or3) {}
+	(1+1,5) node (in31) {}
+	(2+1,5) node (in32) {}
+	(3+1,5) node (out3) {}
+	(in31) |- (or3.in 2)
+	(in32) |- ++(-0.6,-0.75)|- (or3.in 1)
+	(out3) |- (or3.out)
+
+	(1+2.8+3,5-1.5) node [american or port,scale=0.8] (or4) {}
+	(2+3,5) node (in41) {}
+	(3+3,5) node (in42) {}
+	(4+3,5) node (out4) {}
+	(in41) |- (or4.in 2)
+	(in42) |- ++(-0.6,-0.75)|- (or4.in 1)
+	(out4) |- (or4.out)
+
+	(7,0-0.25) node [anchor=north](gnd) {GND}
+	(1,5+0.35) node [anchor=south](vcc) {VCC}
+
+;
+\draw (0,0)rectangle (8,5);
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,-0.15) rectangle (\x+0.25,0.35) (\x,0.1) node {\x};
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,5-0.15) rectangle (\x+0.25,5+0.35);
+\foreach \x in {8,9,...,14} \draw (15-\x,5+0.1) node {\x};
+\draw (0,2) arc[start angle=-90, end angle=90, radius=0.5];
+\end{circuitikz}
+\end{minted}
+
+
+
+
+\subsection{74HC04}
+\begin{center}
+\begin{circuitikz}[scale=0.8] \draw
+	(4,2.5) node [anchor=center] {$74HC04, 6\cdot NOT$}
+	(1.5,1) node [american not port,scale=0.55] (not1) {}
+	(1,0) node (in11) {}
+	(2,0) node (out1) {}
+	(in11) |- (not1.in)
+	(out1) |- (not1.out)
+
+	(1.5+2,1) node [american not port,scale=0.55] (not2) {}
+	(1+2,0) node (in21) {}
+	(2+2,0) node (out2) {}
+	(in21) |- (not2.in)
+	(out2) |- (not2.out)
+
+	(1.5+4,1) node [american not port,scale=0.55] (not5) {}
+	(1+4,0) node (in51) {}
+	(2+4,0) node (out5) {}
+	(in51) |- (not5.in)
+	(out5) |- (not5.out)
+
+	(1+1.5,5-1) node [american not port,scale=0.55] (not3) {}
+	(1+1,5) node (in31) {}
+	(2+1,5) node (out3) {}
+	(in31) |- (not3.in)
+	(out3) |- (not3.out)
+
+	(1+1.5+2,5-1) node [american not port,scale=0.55] (not4) {}
+	(2+2,5) node (in41) {}
+	(3+2,5) node (out4) {}
+	(in41) |- (not4.in)
+	(out4) |- (not4.out)
+
+	(1+1.5+4,5-1) node [american not port,scale=0.55] (not6) {}
+	(2+4,5) node (in61) {}
+	(3+4,5) node (out6) {}
+	(in61) |- (not6.in)
+	(out6) |- (not6.out)
+
+	(7,0-0.25) node [anchor=north](gnd) {GND}
+	(1,5+0.35) node [anchor=south](vcc) {VCC}
+;\draw (0,0)rectangle (8,5);
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,-0.15) rectangle (\x+0.25,0.35) (\x,0.1) node {\x};
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,5-0.15) rectangle (\x+0.25,5+0.35);
+\foreach \x in {8,9,...,14} \draw (15-\x,5+0.1) node {\x};
+\draw (0,2) arc[start angle=-90, end angle=90, radius=0.5];
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz}[scale=0.8] \draw
+	(4,2.5) node [anchor=center] {$74HC04, 6\cdot NOT$}
+	(1.5,1) node [american not port,scale=0.55] (not1) {}
+	(1,0) node (in11) {}
+	(2,0) node (out1) {}
+	(in11) |- (not1.in)
+	(out1) |- (not1.out)
+
+	(1.5+2,1) node [american not port,scale=0.55] (not2) {}
+	(1+2,0) node (in21) {}
+	(2+2,0) node (out2) {}
+	(in21) |- (not2.in)
+	(out2) |- (not2.out)
+
+	(1.5+4,1) node [american not port,scale=0.55] (not5) {}
+	(1+4,0) node (in51) {}
+	(2+4,0) node (out5) {}
+	(in51) |- (not5.in)
+	(out5) |- (not5.out)
+
+	(1+1.5,5-1) node [american not port,scale=0.55] (not3) {}
+	(1+1,5) node (in31) {}
+	(2+1,5) node (out3) {}
+	(in31) |- (not3.in)
+	(out3) |- (not3.out)
+
+	(1+1.5+2,5-1) node [american not port,scale=0.55] (not4) {}
+	(2+2,5) node (in41) {}
+	(3+2,5) node (out4) {}
+	(in41) |- (not4.in)
+	(out4) |- (not4.out)
+
+	(1+1.5+4,5-1) node [american not port,scale=0.55] (not6) {}
+	(2+4,5) node (in61) {}
+	(3+4,5) node (out6) {}
+	(in61) |- (not6.in)
+	(out6) |- (not6.out)
+
+	(7,0-0.25) node [anchor=north](gnd) {GND}
+	(1,5+0.35) node [anchor=south](vcc) {VCC}
+;\draw (0,0)rectangle (8,5);
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,-0.15) rectangle (\x+0.25,0.35) (\x,0.1) node {\x};
+\foreach \x in {1,2,...,7} \filldraw [fill=white] (\x-0.25,5-0.15) rectangle (\x+0.25,5+0.35);
+\foreach \x in {8,9,...,14} \draw (15-\x,5+0.1) node {\x};
+\draw (0,2) arc[start angle=-90, end angle=90, radius=0.5];
+\end{circuitikz}
+\end{minted}
+
 
 
 
