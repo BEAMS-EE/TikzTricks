@@ -14,6 +14,7 @@
 \usepackage{textcomp}
 \usepackage{gensymb} % \ohm, celsius
 \usepackage{todo}
+\usepackage{pgfplots}
 
 \usepackage{mathastext} % math as standard text : units are respecting typography conventions.
 
@@ -34,6 +35,169 @@ breaklines,
 \begin{document}
 
 \maketitle
+
+\section{Basic circuits}
+
+\subsection{Voltage source and lamp}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) to [sinusoidal voltage source, l=$E$] (0,2)--(2,2) to [lamp, l=$R$] (2,0) --(0,0);
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,0) to [sinusoidal voltage source, l=$E$] (0,2)--(2,2) to [lamp, l=$R$] (2,0) --(0,0);
+		\end{circuitikz}
+\end{minted}
+
+
+
+
+
+
+
+
+
+
+
+\section{Filters}
+
+\subsection{RLC - Out on RL}
+\begin{center}
+\begin{circuitikz}[scale=0.8]\draw
+	(0,0) to [open, v^>=$v_{in}$,o-o] (0,4) to [C,l=$22nF$] (2,4) to [L,l=$12mH$]  (2,2) to [R,l=$82\Omega$](2,0) to [short](0,0)
+	(2,4) -- (4,4) to [open, v^<=$v_{out}$,o-o] (4,0) -- (2,0)
+	;
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}[scale=0.8]\draw
+			(0,0) to [open, v^>=$v_{in}$,o-o] (0,4) to [C,l=$22nF$] (2,4) to [L,l=$12mH$]  (2,2) to [R,l=$82\Omega$](2,0) to [short](0,0)
+			(2,4) -- (4,4) to [open, v^<=$v_{out}$,o-o] (4,0) -- (2,0);
+		\end{circuitikz}
+\end{minted}
+
+
+\subsection{RC high-pass}
+\begin{center}
+\begin{circuitikz} \draw
+(0,0)   node[ground]{}
+		to[american voltage source, v=$V_{in}$, invert] (0,3)
+		to[C, l=$C$] (3,3)
+		(3,0) to[R, l=$R$, v=$V_{out}$] (3,3)
+		(3,0)--(0,0)
+;
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0)   node[ground]{}
+			to[american voltage source, v=$V_{in}$, invert] (0,3)
+			to[C, l=$C$] (3,3)
+			(3,0) to[R, l=$R$, v=$V_{out}$] (3,3)
+			(3,0)--(0,0);
+		\end{circuitikz}
+\end{minted}
+
+
+\subsection{RC high-pass with generator}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0)   node[ground]{}
+	to[sinusoidal voltage source, v=$V{in}$] 	(0,3)
+	to[R, l=$R_G$]									(2,3)
+	to[C, l=$10nF$]   						    (5,3)
+	(5,0) to[R, l=$10k\Omega$, v=$V{out}$] (5,3)
+	(5,0)--(0,0)
+	(0,4.5) node[] {Générateur};
+\draw[dotted](-2,-1)--(-2,4)--(2,4)--(2,-1)--(-2,-1);
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0)   node[ground]{}
+			to[sinusoidal voltage source, v=$V{in}$] (0,3)
+			to[R, l=$R_G$] (2,3)
+			to[C, l=$10nF$] (5,3)
+			(5,0) to[R, l=$10k\Omega$, v=$V{out}$] (5,3)
+			(5,0)--(0,0)
+			(0,4.5) node[] {Générateur};
+		\draw[dotted](-2,-1)--(-2,4)--(2,4)--(2,-1)--(-2,-1);
+		\end{circuitikz}
+\end{minted}
+
+
+\subsection{RLC - Out on C}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0)   node[ground]{}
+	to[american voltage source, v=$V_{in}$, invert] (0,3)
+	to[R, l=$R$] (3,3)
+	to[L, l=$L$] (6,3)
+	(6,0) to[C, l=$C$, v=$V_{out}$] (6,3)
+	(6,0)--(0,0);
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0)   node[ground]{}
+			to[american voltage source, v=$V_{in}$, invert] (0,3)
+			to[R, l=$R$] (3,3)
+			to[L, l=$L$] (6,3)
+			(6,0) to[C, l=$C$, v=$V_{out}$] (6,3)
+			(6,0)--(0,0);
+		\end{circuitikz}
+\end{minted}
+
+
+\subsection{RLC with generator - Out on C}
+\begin{center}
+\begin{circuitikz} \draw
+	(0,0)   node[ground]{}
+	to[sinusoidal voltage source, v=$V{in}$] (0,3)
+	to[R, l=$R_G$] (2,3)
+	to[R, l=$R$] (4,3)
+	to[L, l=$8.2mH$] (6,3)
+	(6,0) to[C, l=$33nF$, v=$V_{out}$] (6,3)
+	(6,0)--(0,0)
+	(0,4.5) node[] {Générateur};
+	\draw[dotted](-2,-1)--(-2,4)--(2,4)--(2,-1)--(-2,-1);
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(0,0)   node[ground]{}
+			to[sinusoidal voltage source, v=$V{in}$] (0,3)
+			to[R, l=$R_G$] (2,3)
+			to[R, l=$R$] (4,3)
+			to[L, l=$8.2mH$] (6,3)
+			(6,0) to[C, l=$33nF$, v=$V_{out}$] (6,3)
+			(6,0)--(0,0)
+			(0,4.5) node[] {Générateur};
+			\draw[dotted](-2,-1)--(-2,4)--(2,4)--(2,-1)--(-2,-1);
+		\end{circuitikz}
+\end{minted}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Transistors}
 
@@ -320,6 +484,20 @@ breaklines,
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Operational amplifiers}
 
 \subsection{Inverter with voltage and buffered offset}
@@ -375,6 +553,157 @@ breaklines,
 
 
 
+
+
+\begin{center}
+\begin{circuitikz}\draw
+	(0,4.5) to [photodiode,v_<=$V_D$, ] (0,0) node [ground] {}
+	(4,4) node[op amp, yscale=-1] (opamp) {}
+	(opamp.down) ++ (0,+0.5) node[above] {12V} -- (opamp.down)
+	(opamp.up) ++ (0,-0.5) node[below] {-12V} -- (opamp.up)
+	(opamp.-) -| ++(-0.5,-1.5) to [R, l_=$R_2$] ++(2.75,0) -|  (opamp.out)
+	(opamp.-) -| ++(-0.5,-1.5) to [R, l=$R_1$] (2.25,0) node[ground] {}
+	(opamp.+) to [short](0,4.5)
+	(opamp.out) to [short] ++(1.5,0) node (A) {}
+	to [open, v^<=$V_{amp}$, o-o] ++(0,-4) node [ground]{}
+	;
+\end{circuitikz}
+\end{center}
+
+
+\begin{minted}{latex}
+\begin{circuitikz}\draw
+	(0,4.5) to [photodiode,v_<=$V_D$, ] (0,0) node [ground] {}
+	(4,4) node[op amp, yscale=-1] (opamp) {}
+	(opamp.down) ++ (0,+0.5) node[above] {12V} -- (opamp.down)
+	(opamp.up) ++ (0,-0.5) node[below] {-12V} -- (opamp.up)
+	(opamp.-) -| ++(-0.5,-1.5) to [R, l_=$R_2$] ++(2.75,0) -|  (opamp.out)
+	(opamp.-) -| ++(-0.5,-1.5) to [R, l=$R_1$] (2.25,0) node[ground] {}
+	(opamp.+) to [short](0,4.5)
+	(opamp.out) to [short] ++(1.5,0) node (A) {}
+	to [open, v^<=$V_{amp}$, o-o] ++(0,-4) node [ground]{}
+	;
+\end{circuitikz}
+\end{minted}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Diodes}
+
+\subsection{Pulsed LED}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) to [square voltage source, l=$E1$] (0,2) to [R, l=$R$] (2,2) to [led, l_=$D$](2,0) --(0,0)
+	;
+\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,0) to [square voltage source, l=$E1$] (0,2) to [R, l=$R$] (2,2) to [led, l_=$D$](2,0) --(0,0)
+			;
+		\end{circuitikz}
+\end{minted}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Graphs}
+\subsection{Logarithmic axis}
+
+\begin{center}
+\begin{tikzpicture}
+	\begin{loglogaxis}[
+		xmin=1e-1, xmax=1e5,
+		ymin=1e-1, ymax=1e5,
+		yticklabels={,,},
+		xticklabels={,,},
+		grid=both,
+		width=17cm,
+		height=17cm,
+		major grid style={black!50}
+		]
+	\end{loglogaxis}
+\end{tikzpicture}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{tikzpicture}
+			\begin{loglogaxis}[
+				xmin=1e-1, xmax=1e5,
+				ymin=1e-1, ymax=1e5,
+				yticklabels={,,},
+				xticklabels={,,},
+				grid=both,
+				width=17cm,
+				height=17cm,
+				major grid style={black!50}
+				]
+			\end{loglogaxis}
+		\end{tikzpicture}
+\end{minted}
+\subsection{Semi-logarithmic axis}
+
+\begin{center}
+\begin{tikzpicture}
+	\begin{axis}[
+		xmode=log,
+		xmin=1e-1, xmax=1e5,
+		ymin=1, ymax=9,
+		yticklabels={,,},
+		xticklabels={,,},
+		grid=both,
+		width=17cm,
+		height=9cm,
+		major grid style={black!50}
+		]
+	\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{tikzpicture}
+			\begin{axis}[
+				xmode=log,
+				xmin=1e-1, xmax=1e5,
+				ymin=1, ymax=9,
+				yticklabels={,,},
+				xticklabels={,,},
+				grid=both,
+				width=17cm,
+				height=9cm,
+				major grid style={black!50}
+				]
+			\end{axis}
+		\end{tikzpicture}
+\end{minted}
 \newpage{}
 
 \tableofcontents
