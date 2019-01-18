@@ -1,0 +1,382 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8x]{inputenc}
+
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{hyperref}% hyperliens
+\usepackage{tikz}
+\usetikzlibrary{babel,positioning,calc}
+\usepackage[]{circuitikz}
+\usepackage{textcomp}
+\usepackage{gensymb} % \ohm, celsius
+\usepackage{todo}
+
+\usepackage{mathastext} % math as standard text : units are respecting typography conventions.
+
+\usepackage{minted}
+\usepackage{xcolor}
+\setminted{%
+frame=single,
+fontsize=\scriptsize,
+breaklines,
+}
+
+\usepackage{fullpage}
+
+
+
+\title{\vspace*{-5cm}TikZ tricks \\ Stop wasting your time on tex.stackexchange.com}
+
+\begin{document}
+
+\maketitle
+
+\section{Transistors}
+
+\subsection{Alone}
+\begin{circuitikz} \draw
+	(2.25, 1) node[nfet] (mos) {}		
+	(mos.D) -- (2.25, 2) to  [short, -o](3.25, 2)  node[anchor=west] {} %D		
+	(mos.S) -- (2.25, 0) to [short, -o](3.25, 0)  node[anchor=west] { } %S		
+	(mos.B) -- (mos.S)
+	(2.25,0) to [short, -o](0,0)  node[anchor=east] {} %S		
+	(0,2)  node[anchor=east]{}[short, o-] to  (1,2) %G
+	(1,2) -- (1,1) -- (mos.G)
+	;
+\end{circuitikz}\hspace*{1cm}
+\begin{circuitikz}\draw
+	(0,0) node[anchor=east] {} %g
+	to [short, o-] (1,0) 
+	to [open, v<={~}] (1,-2)
+	to [short, -o] (4,-2)
+	to [short, -o] (0,-2) node[anchor=east] {} %s
+	(3,0) to [cI, i={~}] (3,-2)
+	(3,-2) to [short, -o] (4,-2) node[anchor=west] {} %s
+	(3,0) to [short, -o] (4,0)
+		to node[anchor=west] {} (4,0) %d
+;\end{circuitikz}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(2.25, 1) node[nfet] (mos) {}		
+			(mos.D) -- (2.25, 2) to  [short, -o](3.25, 2)  node[anchor=west] {} %D		
+			(mos.S) -- (2.25, 0) to [short, -o](3.25, 0)  node[anchor=west] { } %S		
+			(mos.B) -- (mos.S)
+			(2.25,0) to [short, -o](0,0)  node[anchor=east] {} %S		
+			(0,2)  node[anchor=east]{}[short, o-] to  (1,2) %G
+			(1,2) -- (1,1) -- (mos.G)
+			;
+		\end{circuitikz}\hspace*{1cm}
+		\begin{circuitikz}\draw
+			(0,0) node[anchor=east] {} %g
+			to [short, o-] (1,0) 
+			to [open, v<={~}] (1,-2)
+			to [short, -o] (4,-2)
+			to [short, -o] (0,-2) node[anchor=east] {} %s
+			(3,0) to [cI, i={~}] (3,-2)
+			(3,-2) to [short, -o] (4,-2) node[anchor=west] {} %s
+			(3,0) to [short, -o] (4,0)
+				to node[anchor=west] {} (4,0) %d
+		;\end{circuitikz}
+\end{minted}
+
+\subsection{Alone with voltage and current} 
+\begin{center}
+	\begin{circuitikz} \draw
+	(2.25, 1) node[nfet] (mos) {}	
+	(mos.D) -- (2.25, 2) to  [short, -o, i<=$I_D$](3.25, 2)  node[anchor=west] {D} %D		
+	(mos.S) -- (2.25, 0) to [short, -o](3.25, 0)  node[anchor=west] {S} %S		
+	(mos.B) -- (mos.S)
+	(2.25,0) to [short, -o](0,0)  node[anchor=east] {S} %S		
+	(0,2)  node[anchor=east]{G}[short, o-] to  (1,2) %G
+	(1,2) -- (1,1) -- (mos.G)
+	(0,0) [open,v^>=$V_{GS}$] to (0,2)
+	(3.25,0) [open,v>=$V_{DS}$] to (3.25,2)
+	;\end{circuitikz}\hspace*{1cm}
+	\begin{circuitikz}\draw
+	(0,0) node[anchor=east] {g} %g
+	to [short, o-] (1,0) 
+	to [open, v<=$v_{gs}$] (1,-2)
+	to [short, -o] (4,-2)
+	to [short, -o] (0,-2) node[anchor=east] {s} %s
+	(3,0) to [cI, i_=\rotatebox{90}{$g_m\cdot v_{gs}$}] (3,-2)
+	(3,-2) to [short, -o] (4,-2) node[anchor=west] {s} %s
+	(3,0) to [short, -o] (4,0)
+	to node[anchor=west] {d} (4,0) %d
+	(4.0,-2) [open,v>=$v_{ds}$] to (4.0,0)
+;\end{circuitikz}	
+\end{center}
+
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) node[anchor=east] {g} 
+	to [short, o-] (1,0) 
+	to [open, v<=$v_{gs}$] (1,-2)
+	to [short, -o] (0,-2)
+	to  (0,-2) node[anchor=east] {s}
+	(3,0) to [cI=$ g \cdot v_{gs}$] (3,-2)
+	(3,-2) to [short, -o] (4,-2) node[anchor=west] {s}
+	(3,0) to [short, -o] (4,0)
+	to node[anchor=west] {d} (4,0)
+	(1,-2) -- (3,-2)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz} \draw
+			(2.25, 1) node[nfet] (mos) {}	
+			(mos.D) -- (2.25, 2) to  [short, -o, i<=$I_D$](3.25, 2)  node[anchor=west] {D} %D		
+			(mos.S) -- (2.25, 0) to [short, -o](3.25, 0)  node[anchor=west] {S} %S		
+			(mos.B) -- (mos.S)
+			(2.25,0) to [short, -o](0,0)  node[anchor=east] {S} %S		
+			(0,2)  node[anchor=east]{G}[short, o-] to  (1,2) %G
+			(1,2) -- (1,1) -- (mos.G)
+			(0,0) [open,v^>=$V_{GS}$] to (0,2)
+			(3.25,0) [open,v>=$V_{DS}$] to (3.25,2)
+		;\end{circuitikz}\hspace*{1cm}
+		\begin{circuitikz}\draw
+			(0,0) node[anchor=east] {g} %g
+			to [short, o-] (1,0) 
+			to [open, v<=$v_{gs}$] (1,-2)
+			to [short, -o] (4,-2)
+			to [short, -o] (0,-2) node[anchor=east] {s} %s
+			(3,0) to [cI, i_=\rotatebox{90}{$g_m\cdot v_{gs}$}] (3,-2)
+			(3,-2) to [short, -o] (4,-2) node[anchor=west] {s} %s
+			(3,0) to [short, -o] (4,0)
+			to node[anchor=west] {d} (4,0) %d
+			(4.0,-2) [open,v>=$v_{ds}$] to (4.0,0)
+		;\end{circuitikz}
+
+		\begin{circuitikz}\draw
+			(0,0) node[anchor=east] {g} 
+			to [short, o-] (1,0) 
+			to [open, v<=$v_{gs}$] (1,-2)
+			to [short, -o] (0,-2)
+			to  (0,-2) node[anchor=east] {s}
+			(3,0) to [cI=$ g \cdot v_{gs}$] (3,-2)
+			(3,-2) to [short, -o] (4,-2) node[anchor=west] {s}
+			(3,0) to [short, -o] (4,0)
+			to node[anchor=west] {d} (4,0)
+			(1,-2) -- (3,-2)
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Full common source}
+\begin{center}
+	\begin{circuitikz}[scale=1]\draw
+	(0,1) to [short,o-] (9,1)
+	(4,6) to [short] (9,6)
+	(0,3) node[anchor=east] {In} to [short,o-] (1,3)
+	(0,3) node[anchor=south]{} to [open, v_<=$V_{in}$]  (0,1) 
+	(1,3) to [C=$C_{in}$ ](1.5,3) 
+	(1.5,3) to [short,-*] (2,3) node[anchor=south west]{}
+
+	(2,6) node[anchor=south ] (alim) {$+V_{DC}$}
+	(1.6,6) -- (2.4,6) %bar under the label
+	(2,3) to [R, l_=$R_{B1}$](2,6)
+	(2,3) to [R=$R_{B2}$](2,1)
+	(4,3) node[nfet] (mos) {}
+	(mos.G) to [short] (2,3)
+	(mos.D) to (4,4) to [R, l_=$R_D$] (4, 6)		
+	(mos.D) to [short,-*](4,3.5)  to [short] (4.25,3.5)
+	(mos.S) to [short] (4,1)% to [short, -o](2,0)  node[anchor=west] {S}
+	(mos.S) -- (mos.B) %source to bulk connection		
+
+	(4.25,3.5) node[anchor=south]{} to [C, l^=$C{out}$] (6,3.5) to  [short](6,3.5)node[anchor=south]{} to [short,-o](6.5,3.5)node [anchor=south] {Out}	
+	(6,3.5) to [generic, l_=$R_{ch}$] (6,1)
+	(6.5,3.5) to [open,v^<=$V_{out}$] (6.5,1)
+	(9,6) to [battery, l_=$E$](9,1)
+	(4,1) node[circ]{}
+	(4,1) node[ground]{}
+	;\end{circuitikz}
+\end{center}
+
+
+\begin{minted}{latex}
+		\begin{circuitikz}[scale=1]\draw
+		(0,1) to [short,o-] (9,1)
+		(4,6) to [short] (9,6)
+		(0,3) node[anchor=east] {In} to [short,o-] (1,3)
+		(0,3) node[anchor=south]{} to [open, v_<=$V_{in}$]  (0,1) 
+		(1,3) to [C=$C_{in}$ ](1.5,3) 
+		(1.5,3) to [short,-*] (2,3) node[anchor=south west]{}
+
+		(2,6) node[anchor=south ] (alim) {$+V_{DC}$}
+		(1.6,6) -- (2.4,6) %bar under the label
+		(2,3) to [R, l_=$R_{B1}$](2,6)
+		(2,3) to [R=$R_{B2}$](2,1)
+		(4,3) node[nfet] (mos) {}
+		(mos.G) to [short] (2,3)
+		(mos.D) to (4,4) to [R, l_=$R_D$] (4, 6)		
+		(mos.D) to [short,-*](4,3.5)  to [short] (4.25,3.5)
+		(mos.S) to [short] (4,1)% to [short, -o](2,0)  node[anchor=west] {S}
+		(mos.S) -- (mos.B) %source to bulk connection		
+
+		(4.25,3.5) node[anchor=south]{} to [C, l^=$C{out}$] (6,3.5) to  [short](6,3.5)node[anchor=south]{} to [short,-o](6.5,3.5)node [anchor=south] {Out}	
+		(6,3.5) to [generic, l_=$R_{ch}$] (6,1)
+		(6.5,3.5) to [open,v^<=$V_{out}$] (6.5,1)
+		(9,6) to [battery, l_=$E$](9,1)
+		(4,1) node[circ]{}
+		(4,1) node[ground]{}
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Common source - Direct polarisation}
+\begin{center}
+\begin{circuitikz}[scale=1]\draw
+	(0,1) to [short,o-] (9,1)
+	(4,6) to [short] (9,6)
+	(0,3) node[anchor=east] {In} to [short,o-] (1,3)
+	(0,3) to [open, v_<=$V_{in}$]  (0,1)
+	(1,3) to [C=$C_{in}$ ](1.5,3)
+	(1.5,3) to [short,-*] (2,3)
+	(2,6) node[anchor=south ] (alim) {$+V_{DC}$}
+	(1.6,6) -- (2.4,6) %bar under the label
+	(2,3) to [R, l_=$R_{B1}$](2,6)
+	(4,3) node[nfet] (mos) {}
+	(mos.G) to [short] (2,3)
+	(mos.D) to (4,4) to [R, l_=$R_D$] (4, 6)	
+	(mos.D) to [short,-*](4,3.5)  to [short] (4.25,3.5)
+	(mos.S) to [short] (4,1)% to [short, -o](2,0)  node[anchor=west] {S}
+	(mos.S) -- (mos.B) %source to bulk connection		
+
+	(4.25,3.5) to [C, l^=$C{out}$] (6,3.5) to  [short](6,3.5) to [short,-o](6.5,3.5)node [anchor=south] {Out}	
+	(6,3.5) to [generic, l_=$Z_{ch}$] (6,1)
+	(6.5,3.5) to [open,v^<=$V_{out}$] (6.5,1)
+	(9,6) to [battery, l=$E$](9,1)
+;\end{circuitikz}
+\end{center}
+
+
+\begin{minted}{latex}
+	\begin{circuitikz}[scale=1]\draw
+		(0,1) to [short,o-] (9,1)
+		(4,6) to [short] (9,6)
+		(0,3) node[anchor=east] {In} to [short,o-] (1,3)
+		(0,3) to [open, v_<=$V_{in}$]  (0,1)
+		(1,3) to [C=$C_{in}$ ](1.5,3)
+		(1.5,3) to [short,-*] (2,3)
+		(2,6) node[anchor=south ] (alim) {$+V_{DC}$}
+		(1.6,6) -- (2.4,6) %bar under the label
+		(2,3) to [R, l_=$R_{B1}$](2,6)
+		(4,3) node[nfet] (mos) {}
+		(mos.G) to [short] (2,3)
+		(mos.D) to (4,4) to [R, l_=$R_D$] (4, 6)	
+		(mos.D) to [short,-*](4,3.5)  to [short] (4.25,3.5)
+		(mos.S) to [short] (4,1)% to [short, -o](2,0)  node[anchor=west] {S}
+		(mos.S) -- (mos.B) %source to bulk connection		
+
+		(4.25,3.5) to [C, l^=$C{out}$] (6,3.5) to  [short](6,3.5) to [short,-o](6.5,3.5)node [anchor=south] {Out}	
+		(6,3.5) to [generic, l_=$Z_{ch}$] (6,1)
+		(6.5,3.5) to [open,v^<=$V_{out}$] (6.5,1)
+		(9,6) to [battery, l=$E$](9,1)
+	;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Common source - small signal}
+\begin{center}
+\begin{circuitikz}[scale=0.8]\draw
+	(1,0) to [short,o-o] (11,0)
+	(1,3) node[anchor=east] {In} to [short,o-] (1,3)
+	(1,3) to [open, v_<=$V_{in}$]  (1,0)
+	(1,3) to [short] (3,3)
+	(2,3) to [R, l_=$R_{b1}$](2,0)
+	(3,3) to [R=$R_{b2}$](3,0)
+	(3,3) to [short,-o](4,3) node [anchor=west] {} 
+	(4,3) to [open, v^<=$v_{g}$](4,0)
+	(6,3) to [cI=\rotatebox{90}{$g_m \cdot v_{g}$}] (6,0)
+	(8.5,0) to [R,l_=$R_D$] (8.5,3)
+	(10,3) to [generic, l=$R_{ch}$] (10,0)
+	(6,3) to [short,-o] (11,3) node [anchor=west] {Out}
+	(11,3) to [open, v^<=$V_{out}$](11,0)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}[scale=0.8]\draw
+			(1,0) to [short,o-o] (11,0)
+			(1,3) node[anchor=east] {In} to [short,o-] (1,3)
+			(1,3) to [open, v_<=$V_{in}$]  (1,0)
+			(1,3) to [short] (3,3)
+			(2,3) to [R, l_=$R_{b1}$](2,0)
+			(3,3) to [R=$R_{b2}$](3,0)
+			(3,3) to [short,-o](4,3) node [anchor=west] {} 
+			(4,3) to [open, v^<=$v_{g}$](4,0)
+			(6,3) to [cI=\rotatebox{90}{$g_m \cdot v_{g}$}] (6,0)
+			(8.5,0) to [R,l_=$R_D$] (8.5,3)
+			(10,3) to [generic, l=$R_{ch}$] (10,0)
+			(6,3) to [short,-o] (11,3) node [anchor=west] {Out}
+			(11,3) to [open, v^<=$V_{out}$](11,0)
+		;\end{circuitikz}
+\end{minted}
+
+
+
+
+\section{Operational amplifiers}
+
+\subsection{Inverter with voltage and buffered offset}
+
+\begin{circuitikz} [scale=1.2]\draw
+	(0,0) node[op amp] (opamp) {}
+	(opamp.down) ++ (0,-0.5) node[ground]{} -- (opamp.down)
+	(opamp.up) ++ (0,.5) node[above] {12V} -- (opamp.up)
+	(opamp.-) -| (-1.5,2) to [R, l=$R2$] (1.5,2) |-  (opamp.out)
+	(opamp.+) -| (-1.5,-0.4) to [european voltage source, l_=$V_{C}$,-*] (-1.5,-2) node[ground] {} 
+	(-4,-2) node[ground] {}  to [sV,*-*] (-4,0.4) |- ++(0.5,0) to [C,l=$C1$] ++(0.25,0) to [R,l=$R1$] (opamp.-)
+	(-4,-2) node[anchor=west] {$0V$}
+	(-1.5,-2) node[anchor=west] {$0V$}
+	(-2.9,0.4) node[circ]{}
+	(-2.9,0.4) node[anchor=south]{\rotatebox{90}{$6.3V+v_{in}$}}
+	(-1.5,0.4) node[circ]{}
+	(-1.5,0.4) node[anchor=south west]{\rotatebox{42}{$6.3V$}}
+	(-1.5,-0.4) node[circ]{}
+	(-1.5,-0.4) node[anchor=east]{$6.3V$}
+	(1.5,0) node[circ]{}
+	(1.5,0) node[anchor=south west]{$6.3V-10v_{in}$}
+	(opamp.out) to (2.5,0)
+	(2.5,-2) node[ground] {} to [open, v>=$V_{out}$] (2.5,0)
+	(-4.5,-2) to [open, v^>=$v_{in}$] (-4.5,0.5)
+	(-4,0.4) node[anchor=east] {$v_{in}$}
+;\end{circuitikz}
+
+
+\begin{minted}{latex}
+		\begin{circuitikz} [scale=1.2]\draw
+			(0,0) node[op amp] (opamp) {}
+			(opamp.down) ++ (0,-0.5) node[ground]{} -- (opamp.down)
+			(opamp.up) ++ (0,.5) node[above] {12V} -- (opamp.up)
+			(opamp.-) -| (-1.5,2) to [R, l=$R2$] (1.5,2) |-  (opamp.out)
+			(opamp.+) -| (-1.5,-0.4) to [european voltage source, l_=$V_{C}$,-*] (-1.5,-2) node[ground] {} 
+			(-4,-2) node[ground] {}  to [sV,*-*] (-4,0.4) |- ++(0.5,0) to [C,l=$C1$] ++(0.25,0) to [R,l=$R1$] (opamp.-)
+			(-4,-2) node[anchor=west] {$0V$}
+			(-1.5,-2) node[anchor=west] {$0V$}
+			(-2.9,0.4) node[circ]{}
+			(-2.9,0.4) node[anchor=south]{\rotatebox{90}{$6.3V+v_{in}$}}
+			(-1.5,0.4) node[circ]{}
+			(-1.5,0.4) node[anchor=south west]{\rotatebox{42}{$6.3V$}}
+			(-1.5,-0.4) node[circ]{}
+			(-1.5,-0.4) node[anchor=east]{$6.3V$}
+			(1.5,0) node[circ]{}
+			(1.5,0) node[anchor=south west]{$6.3V-10v_{in}$}
+			(opamp.out) to (2.5,0)
+			(2.5,-2) node[ground] {} to [open, v>=$V_{out}$] (2.5,0)
+			(-4.5,-2) to [open, v^>=$v_{in}$] (-4.5,0.5)
+			(-4,0.4) node[anchor=east] {$v_{in}$}
+		;\end{circuitikz}
+\end{minted}
+
+
+
+\newpage{}
+
+\tableofcontents
+
+\end{document}
