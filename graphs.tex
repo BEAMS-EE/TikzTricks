@@ -603,6 +603,24 @@ breaklines,
 
 \section{Diodes}
 
+
+\subsection{Alone}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) node[anchor=east] {A} to [short,i>^=$I$] (1.5,0)
+	(0,0) to [Do, v<=$V$] (2.5,0) node [anchor=west]{K}
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,0) node[anchor=east] {A} to [short,i>^=$I$] (1.5,0)
+			(0,0) to [Do, v<=$V$] (2.5,0) node [anchor=west]{K}
+		;\end{circuitikz}
+\end{minted}
+
+
+
 \subsection{Pulsed LED}
 \begin{center}
 \begin{circuitikz}\draw
@@ -619,14 +637,168 @@ breaklines,
 \end{minted}
 
 
+\subsection{LED}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,3) to [american voltage source, l=$V_{dc}$] (0,0)
+	(0,3) to [european resistor, l^=$R$] (3,3)
+	to [leDo] (3,0) -- (0,0)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,3) to [american voltage source, l=$V_{dc}$] (0,0)
+			(0,3) to [european resistor, l^=$R$] (3,3)
+			to [leDo] (3,0) -- (0,0)
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Load}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) to [sV, l=$V_{ac}$] (0,3)
+	to [Do] (3,3)
+	to [european resistor,l_=$Z_{Charge}$] (3,0) to (0,0)
+	(3.5,3) to [open, v^<=$V_{charge}$] (3.5,0)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,0) to [sV, l=$V_{ac}$] (0,3)
+			to [Do] (3,3)
+			to [european resistor,l_=$Z_{Charge}$] (3,0) to (0,0)
+			(3.5,3) to [open, v^<=$V_{charge}$] (3.5,0)
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Load and C in parallel}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) to [sV, l=$V_{ac}$] (0,3)
+	to [Do] (5,3)
+	to [european resistor,l=$R_{Ch}$] (5,0) to (0,0)
+	(4,3) to [eC,l_=$C$, *-*] (4,0)
+	(6,3) to [open, v^<=$V_{charge}$] (6,0)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,0) to [sV, l=$V_{ac}$] (0,3)
+			to [Do] (5,3)
+			to [european resistor,l=$R_{Ch}$] (5,0) to (0,0)
+			(4,3) to [eC,l_=$C$, *-*] (4,0)
+			(6,3) to [open, v^<=$V_{charge}$] (6,0)
+		;\end{circuitikz}
+\end{minted}
 
 
 
+\subsection{Full-wave rectifier with C and load}
+\begin{center}
+\begin{circuitikz}\draw
+	(-2,1) to [sV, l_=$V_{ac}$] (-2,3)
+	(-2,1) to (-1,1) to (-1,1.75) to [short,-*](2,1.75)
+	(-2,3) to (-1,3) to (-1,2.25) to [short,-*](0,2.25)
+	(0,0) to [Do] (0,2) to [Do](0,4)
+	(2,0) to [Do,*-] (2,2) to [Do, -*](2,4)
+	(0,4) to [short](5,4)
+	(0,0) to [short](2,0)
+	(5,4) to [european resistor,l=$Z_{Ch}$] (5,0) to (2,0)
+	(4,4) to [eC,l_=$C$, *-*] (4,0)
+	(6,4) to [open, v^<=$V_{charge}$] (6,0)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(-2,1) to [sV, l_=$V_{ac}$] (-2,3)
+			(-2,1) to (-1,1) to (-1,1.75) to [short,-*](2,1.75)
+			(-2,3) to (-1,3) to (-1,2.25) to [short,-*](0,2.25)
+			(0,0) to [Do] (0,2) to [Do](0,4)
+			(2,0) to [Do,*-] (2,2) to [Do, -*](2,4)
+			(0,4) to [short](5,4)
+			(0,0) to [short](2,0)
+			(5,4) to [european resistor,l=$Z_{Ch}$] (5,0) to (2,0)
+			(4,4) to [eC,l_=$C$, *-*] (4,0)
+			(6,4) to [open, v^<=$V_{charge}$] (6,0)
+		;\end{circuitikz}
+\end{minted}
 
 
+\subsection{Zener alone}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) node[anchor=east] {A} to [short,i>^=$I$] (1.5,0)
+	(0,0) to [zDo, v<=$V$] (2.5,0) node [anchor=west]{K}
+;\end{circuitikz}
+\end{center}
 
 
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,0) node[anchor=east] {A} to [short,i>^=$I$] (1.5,0)
+			(0,0) to [zDo, v<=$V$] (2.5,0) node [anchor=west]{K}
+		;\end{circuitikz}
+\end{minted}
 
+
+\subsection{Zener - DC source}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,0) to [battery, invert, l=$V_{2}$] (0,3)
+	to [european resistor,l=$R$] (3,3)
+	(3,0) to [zDo, i<=$I_z$] (3,3)
+	(3,0) to (0,0)
+	(3,0) to [short,*-o] (4,0)
+	(3,3) to [short,*-o] (4,3)
+	(4,3) to [open,v^<=$V_{out}$] (4,0)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,0) to [battery, invert, l=$V_{2}$] (0,3)
+			to [european resistor,l=$R$] (3,3)
+			(3,0) to [zDo, i<=$I_z$] (3,3)
+			(3,0) to (0,0)
+			(3,0) to [short,*-o] (4,0)
+			(3,3) to [short,*-o] (4,3)
+			(4,3) to [open,v^<=$V_{out}\equiv -V(Fig\ref{fig:zenerconv})$] (4,0)
+		;\end{circuitikz}
+\end{minted}
+
+
+\subsection{Zener - DC source and load}
+\begin{center}
+\begin{circuitikz}\draw
+	(0,3) to [battery, v_<=$V_{2}$] (0,0)
+	(0,3) to [european resistor,l=$R$] (3,3)
+	(3,0) to [zDo, i<=$I_z$] (3,3)
+	(3,0) to (0,0)
+	(3,0) to [short,*-o] (4,0) to (5,0)
+	(3,3) to [short,*-o] (4,3) to [short, i=$I_{out}$] (5,3)
+	(5,3) to [european resistor,l=$R_{\mbox{ch}}$] (5,0)
+	(3.5,3) to [open,v^<=$V_{out}$] (3.5,0)
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{circuitikz}\draw
+			(0,3) to [battery, v_<=$V_{2}$] (0,0)
+			(0,3) to [european resistor,l=$R$] (3,3)
+			(3,0) to [zDo, i<=$I_z$] (3,3)
+			(3,0) to (0,0)
+			(3,0) to [short,*-o] (4,0) to (5,0)
+			(3,3) to [short,*-o] (4,3) to [short, i=$I_{out}$] (5,3)
+			(5,3) to [european resistor,l=$R_{\mbox{ch}}$] (5,0)
+			(3.5,3) to [open,v^<=$V_{out}$] (3.5,0)
+		;\end{circuitikz}
+\end{minted}
 
 
 
@@ -704,6 +876,315 @@ breaklines,
 			\end{axis}
 		\end{tikzpicture}
 \end{minted}
+
+
+
+\subsection{$I_z(V_z)$}
+\begin{center}
+\begin{tikzpicture}
+	\begin{axis}[ %title ={4Hz Sine  Wave},
+	% width=7cm,
+	% height=5cm,
+	axis lines=middle,
+	% ymin=-10,
+	ymax=4,
+	xlabel ={$V_z$},
+	xticklabels={},
+	yticklabels={},
+	% ytick={-10,-8,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,8,10}
+	ylabel ={$I_z$},
+    % grid=both,
+    % grid style={line width=.1pt, draw=black!60},
+    % major grid style={line width=.2pt,draw=black},
+    % ultra thick,
+    % minor tick num=5,
+    % enlargelimits={abs=0.5},
+    % axis line style={latex-latex},
+    yticklabel style={font=\normalsize,fill=white},
+    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+    % ylabel style={at={(ticklabel* cs:1)},anchor=south west},
+	]
+	\addplot[%
+	% red,
+	domain=1:3,
+	thick,
+	samples=100
+	]
+	{0.9*(x-1)^2};
+	% \addlegendentry{$V_{in}$}
+	\addplot[%
+	% red,
+	domain=0:1,
+	thick,
+	samples=100
+	]
+	{0};
+	\addplot[%
+	red,
+	domain=0:3,
+	thick,
+	samples=100
+	]
+	{-x+3};
+	\addplot[%
+	red,
+	domain=0:2,
+	thick,
+	samples=100
+	]
+	{-1.5*x+3};
+	\addplot[%
+	red,
+	domain=0:1,
+	thick,
+	samples=100
+	]
+	{-3*x+3};
+	\addplot[%
+	red,
+	domain=0:0.5,
+	thick,
+	samples=100
+	]
+	{-6*x+3};
+	\end{axis}
+	% \draw[dashed] (4.55,0) -- (4.55,5);
+	\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]2.5,0)-- node[below=0.25cm, text width=2cm, align=center]
+         {$V_2 < V_{BR}$}([yshift=-0.2cm]0,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+	\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]6.85,0)-- node[below=0.25cm, text width=4cm, align=center]
+         {$V_2 > V_{BR}$}([yshift=-0.2cm]2.5,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+    \draw [<-] (0,4.5) to [out=10,in=170] node[above]{$R_{ch} \searrow$} (6.85,4.5);
+% Note that I had to replace the – by “to”.  Notice how the angles work:
+% •
+% When the curves goes “out” of (0,0), you put a needle with one extremity
+% on the starting point and the other one facing right and you turn it coun-
+% terclockwise until it is tangent to the curve.  The angle by which you have
+% to turn the needle gives you the “out” angle.
+% •
+% When the curves goes “in” at (2,1.5), you put a needle with one extremity
+% on the arrival point and the other one facing right and you turn it coun-
+% terclockwise until it is tangent to the curve.  The angle by which you have
+% to turn the needle gives you the “in” angle.
+% https://cremeronline.com/LaTeX/minimaltikz.pdf
+% A very minimal introduction to TikZ, by Jacques Cremer
+\end{tikzpicture}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{tikzpicture}
+			\begin{axis}[ %title ={4Hz Sine  Wave},
+			% width=7cm,
+			% height=5cm,
+			axis lines=middle,
+			% ymin=-10,
+			ymax=4,
+			xlabel ={$V_z$},
+			xticklabels={},
+			yticklabels={},
+			% ytick={-10,-8,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,8,10}
+			ylabel ={$I_z$},
+		    % grid=both,
+		    % grid style={line width=.1pt, draw=black!60},
+		    % major grid style={line width=.2pt,draw=black},
+		    % ultra thick,
+		    % minor tick num=5,
+		    % enlargelimits={abs=0.5},
+		    % axis line style={latex-latex},
+		    yticklabel style={font=\normalsize,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    % ylabel style={at={(ticklabel* cs:1)},anchor=south west},
+			]
+			\addplot[%
+			domain=1:3,
+			thick,
+			samples=100
+			]
+			{0.9*(x-1)^2};
+			% \addlegendentry{$V_{in}$}
+			\addplot[%
+			domain=0:1,
+			thick,
+			samples=100
+			]
+			{0};
+			\addplot[%
+			red,
+			domain=0:3,
+			thick,
+			samples=100
+			]
+			{-x+3};
+			\addplot[%
+			red,
+			domain=0:2,
+			thick,
+			samples=100
+			]
+			{-1.5*x+3};
+			\addplot[%
+			red,
+			domain=0:1,
+			thick,
+			samples=100
+			]
+			{-3*x+3};
+			\addplot[%
+			red,
+			domain=0:0.5,
+			thick,
+			samples=100
+			]
+			{-6*x+3};
+			\end{axis}
+			% \draw[dashed] (4.55,0) -- (4.55,5);
+			\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]2.5,0)-- node[below=0.25cm, text width=2cm, align=center]
+		         {$V_2 < V_{BR}$}([yshift=-0.2cm]0,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+			\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]6.85,0)-- node[below=0.25cm, text width=4cm, align=center]
+		         {$V_2 > V_{BR}$}([yshift=-0.2cm]2.5,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+		    \draw [<-] (0,4.5) to [out=10,in=170] node[above]{$R_{ch} \searrow$} (6.85,4.5);
+		% Note that I had to replace the – by “to”.  Notice how the angles work:
+		% •
+		% When the curves goes “out” of (0,0), you put a needle with one extremity
+		% on the starting point and the other one facing right and you turn it coun-
+		% terclockwise until it is tangent to the curve.  The angle by which you have
+		% to turn the needle gives you the “out” angle.
+		% •
+		% When the curves goes “in” at (2,1.5), you put a needle with one extremity
+		% on the arrival point and the other one facing right and you turn it coun-
+		% terclockwise until it is tangent to the curve.  The angle by which you have
+		% to turn the needle gives you the “in” angle.
+		% https://cremeronline.com/LaTeX/minimaltikz.pdf
+		% A very minimal introduction to TikZ, by Jacques Cremer
+		\end{tikzpicture}
+\end{minted}
+
+
+
+\subsection{}
+\begin{center}
+\begin{tikzpicture}
+	\begin{axis}[ %title ={4Hz Sine  Wave},
+	% width=7cm,
+	% height=5cm,
+	axis lines=middle,
+	% ymin=-10,
+	ymax=1.5,
+	xlabel ={$I_{out}$},
+	xticklabels={},
+	yticklabels={},
+	% ytick={-10,-8,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,8,10}
+	ylabel ={$V_{out}$},
+    % grid=both,
+    % grid style={line width=.1pt, draw=black!60},
+    % major grid style={line width=.2pt,draw=black},
+    % ultra thick,
+    % minor tick num=5,
+    % enlargelimits={abs=0.5},
+    % axis line style={latex-latex},
+    yticklabel style={font=\normalsize,fill=white},
+    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+    % ylabel style={at={(ticklabel* cs:1)},anchor=south west},
+	]
+	\addplot[%
+	domain=0:2,
+	thick,
+	samples=100
+	]
+	{1};
+	% \addlegendentry{$V_{in}$}
+	\addplot[%
+	domain=2:3,
+	thick,
+	samples=100
+	]
+	{-x+3};
+	\end{axis}
+	\draw[dashed] (4.55,0) -- (4.55,5);
+	\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]4.55,0)-- node[below=0.25cm, text width=4cm]
+         {Grosse charge, $I_{out}$ est donc faible et la Zener est en avalanche. La charge est régulée.}([yshift=-0.2cm]0,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+	\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]6.85,0)-- node[below=0.25cm, text width=2cm]
+         {Diviseur résistif, la Zener est bloquante.}([yshift=-0.2cm]4.55,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+    \draw [->] (0,4.5) to [out=10,in=170] node[above]{$R_{ch} \searrow$} (6.85,4.5);
+% Note that I had to replace the – by “to”.  Notice how the angles work:
+% •
+% When the curves goes “out” of (0,0), you put a needle with one extremity
+% on the starting point and the other one facing right and you turn it coun-
+% terclockwise until it is tangent to the curve.  The angle by which you have
+% to turn the needle gives you the “out” angle.
+% •
+% When the curves goes “in” at (2,1.5), you put a needle with one extremity
+% on the arrival point and the other one facing right and you turn it coun-
+% terclockwise until it is tangent to the curve.  The angle by which you have
+% to turn the needle gives you the “in” angle.
+% https://cremeronline.com/LaTeX/minimaltikz.pdf
+% A very minimal introduction to TikZ, by Jacques Cremer
+\end{tikzpicture}
+\end{center}
+
+\begin{minted}{latex}
+		\begin{tikzpicture}
+			\begin{axis}[ %title ={4Hz Sine  Wave},
+			% width=7cm,
+			% height=5cm,
+			axis lines=middle,
+			% ymin=-10,
+			ymax=1.5,
+			xlabel ={$I_{out}$},
+			xticklabels={},
+			yticklabels={},
+			% ytick={-10,-8,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,8,10}
+			ylabel ={$V_{out}$},
+		    % grid=both,
+		    % grid style={line width=.1pt, draw=black!60},
+		    % major grid style={line width=.2pt,draw=black},
+		    % ultra thick,
+		    % minor tick num=5,
+		    % enlargelimits={abs=0.5},
+		    % axis line style={latex-latex},
+		    yticklabel style={font=\normalsize,fill=white},
+		    xlabel style={at={(ticklabel* cs:1)},anchor=north west},
+		    % ylabel style={at={(ticklabel* cs:1)},anchor=south west},
+			]
+			\addplot[%
+			domain=0:2,
+			thick,
+			samples=100
+			]
+			{1};
+			% \addlegendentry{$V_{in}$}
+			\addplot[%
+			domain=2:3,
+			thick,
+			samples=100
+			]
+			{-x+3};
+			\end{axis}
+			\draw[dashed] (4.55,0) -- (4.55,5);
+			\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]4.55,0)-- node[below=0.25cm, text width=4cm]
+		         {Grosse charge, $I_{out}$ est donc faible et la Zener est en avalanche. La charge est régulée.}([yshift=-0.2cm]0,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+			\draw[decorate, decoration={brace, amplitude=5pt}] ([yshift=-0.2cm]6.85,0)-- node[below=0.25cm, text width=2cm]
+		         {Diviseur résistif, la Zener est bloquante.}([yshift=-0.2cm]4.55,0); % Pour avoir une accolade avec la pointe vers le bas, d'abord donner la coordonnee de droite.
+		    \draw [->] (0,4.5) to [out=10,in=170] node[above]{$R_{ch} \searrow$} (6.85,4.5);
+		% Note that I had to replace the – by “to”.  Notice how the angles work:
+		% •
+		% When the curves goes “out” of (0,0), you put a needle with one extremity
+		% on the starting point and the other one facing right and you turn it coun-
+		% terclockwise until it is tangent to the curve.  The angle by which you have
+		% to turn the needle gives you the “out” angle.
+		% •
+		% When the curves goes “in” at (2,1.5), you put a needle with one extremity
+		% on the arrival point and the other one facing right and you turn it coun-
+		% terclockwise until it is tangent to the curve.  The angle by which you have
+		% to turn the needle gives you the “in” angle.
+		% https://cremeronline.com/LaTeX/minimaltikz.pdf
+		% A very minimal introduction to TikZ, by Jacques Cremer
+		\end{tikzpicture}
+\end{minted}
+
+
+
+
+
 \newpage{}
 
 \tableofcontents
