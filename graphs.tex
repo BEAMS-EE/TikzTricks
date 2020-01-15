@@ -1603,6 +1603,30 @@ breaklines,
 
 
 
+\subsection{Complex plan}
+\begin{center}
+\begin{tikzpicture}
+	\draw[step=0.5cm,gray] (0,0) grid (10,10);
+	\draw[thick,->] (0,5) -- (10,5) node[anchor=north west] {};
+	\draw[thick,->] (5,0) -- (5,10) node[anchor=north west] {};
+	\draw (10,5) node[anchor=west] {Re} ;
+	\draw (5,10) node[anchor=south] {Im} ;
+\end{tikzpicture}
+
+\end{center}
+
+\begin{minted}{latex}
+\begin{tikzpicture}
+	\draw[step=0.5cm,gray] (0,0) grid (10,10);
+	\draw[thick,->] (0,5) -- (10,5) node[anchor=north west] {};
+	\draw[thick,->] (5,0) -- (5,10) node[anchor=north west] {};
+	\draw (10,5) node[anchor=west] {Re} ;
+	\draw (5,10) node[anchor=south] {Im} ;
+\end{tikzpicture}
+\end{minted}
+
+
+
 \subsection{$I_z(V_z)$}
 \begin{center}
 \begin{tikzpicture}
