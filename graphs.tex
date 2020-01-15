@@ -13,6 +13,7 @@
 \usepackage[]{circuitikz}
 \usepackage{textcomp}
 \usepackage{gensymb} % \ohm, celsius
+\usepackage{siunitx}
 \usepackage{todo}
 \usepackage{pgfplots}
 
@@ -701,6 +702,57 @@ breaklines,
 \end{minted}
 
 
+
+
+
+\begin{center}
+\begin{circuitikz}
+    \draw
+    	(0,0) node[ground]{}
+        	to[sinusoidal voltage source, v=$V_{in}$] (0,3)
+        	to[R, l=\si{1}{k\ohm}] (2,3)
+        	to[short] (3,3)
+        	to[open] (7,3)
+        	to[short] (10,3)
+        	to[R, l_=\si{200}{\ohm}, v^<=$ V_{out} $](10,0)
+        	to[short] (7,0)
+        	to[open] (3,0)
+        	to[short] (0,0)
+    	(0,4.3) node[anchor=south] {Générateur}
+    	(5,4.3) node[anchor=south] {Amplification}
+    	(10,4.3) node[anchor=south] {Sortie}
+    	(5,1.2) node[anchor=south] {{\large ?}}
+	;
+	\draw[thick] (3, 3.5) -- (7, 3.5) -- (7, -0.5) -- (3, -0.5) -- (3, 3.5);
+	\draw[dotted](-2,-1)--(-2,4)--(2,4)--(2,-1)--(-2,-1);
+	\draw[dotted](8.3,-1)--(8.3,4)--(11.7,4)--(11.7,-1)--(8.3,-1);
+\end{circuitikz}
+\end{center}
+
+
+\begin{minted}{latex}
+\begin{circuitikz}
+    \draw
+    	(0,0) node[ground]{}
+        	to[sinusoidal voltage source, v=$V_{in}$] (0,3)
+        	to[R, l=\si{1}{k\ohm}] (2,3)
+        	to[short] (3,3)
+        	to[open] (7,3)
+        	to[short] (10,3)
+        	to[R, l_=\si{200}{\ohm}, v^<=$ V_{out} $](10,0)
+        	to[short] (7,0)
+        	to[open] (3,0)
+        	to[short] (0,0)
+    	(0,4.3) node[anchor=south] {Générateur}
+    	(5,4.3) node[anchor=south] {Amplification}
+    	(10,4.3) node[anchor=south] {Sortie}
+    	(5,1.2) node[anchor=south] {{\large ?}}
+	;
+	\draw[thick] (3, 3.5) -- (7, 3.5) -- (7, -0.5) -- (3, -0.5) -- (3, 3.5);
+	\draw[dotted](-2,-1)--(-2,4)--(2,4)--(2,-1)--(-2,-1);
+	\draw[dotted](8.3,-1)--(8.3,4)--(11.7,4)--(11.7,-1)--(8.3,-1);
+\end{circuitikz}
+\end{minted}
 
 
 
