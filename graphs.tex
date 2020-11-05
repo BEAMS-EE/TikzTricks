@@ -1467,6 +1467,54 @@ breaklines,
 \end{minted}
 
 
+\subsection{OR with switch}
+\begin{center}
+	\begin{circuitikz} \draw 
+	(0,0) node [american or port] (or) {\small{\texttt{OR}}}
+
+	(-3,0.3) node[cute spdt mid arrow,xscale=-1] (sw) {}
+
+	($(sw.out 1)-(1,0)$) node {\texttt{+5 V}} % 5V label
+	(sw.out 1) node[rground, yscale=-1, rotate=-90] (alim) {} % 5V alim
+
+	(or.in 1) node[circle,fill,inner sep=1.5pt] () {}
+	(or.in 1) to [bend left] ($(or.in 1)+(1,1)$) node [right] (chanA) {\texttt{Canal A}}
+
+	(sw.out 2) node [ground, rotate=-90] {} % ground
+	(sw.in) -- (or.in 1)
+
+	($(or.in 2)-(0.5,0)$) node [ground] {} to (or.in 2)
+
+	(or.out) node[circle,fill, inner sep=1.5pt] () {}
+	(or.out) to [bend right] ($(or.out)+(1,-0.5)$) node [right] (chanB) {\texttt{Canal B}}
+	(or.out) to [short] ($(or.out)+(0.5,0)$)
+
+	;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+\begin{circuitikz} \draw 
+	(0,0) node [american or port] (or) {\small{\texttt{OR}}}
+
+	(-3,0.3) node[cute spdt mid arrow,xscale=-1] (sw) {}
+
+	($(sw.out 1)-(1,0)$) node {\texttt{+5 V}} % 5V label
+	(sw.out 1) node[rground, yscale=-1, rotate=-90] (alim) {} % 5V alim
+
+	(or.in 1) node[circle,fill,inner sep=1.5pt] () {}
+	(or.in 1) to [bend left] ($(or.in 1)+(1,1)$) node [right] (chanA) {\texttt{Canal A}}
+
+	(sw.out 2) node [ground, rotate=-90] {} % ground
+	(sw.in) -- (or.in 1)
+
+	($(or.in 2)-(0.5,0)$) node [ground] {} to (or.in 2)
+
+	(or.out) node[circle,fill, inner sep=1.5pt] () {}
+	(or.out) to [bend right] ($(or.out)+(1,-0.5)$) node [right] (chanB) {\texttt{Canal B}}
+	(or.out) to [short] ($(or.out)+(0.5,0)$)
+;\end{circuitikz}
+	
+\end{minted}
 
 
 
