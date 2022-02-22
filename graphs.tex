@@ -550,6 +550,45 @@ breaklines,
 \end{minted}
 
 
+
+\subsection{Common source simple, alternative version}
+\begin{center}
+\begin{circuitikz}[scale=1]\draw
+	(2,1) to [short,o-*] (4,1)
+	(4,1) node[eground]{}
+	
+	(2,3) to [open, v_<=$V_{in}$]  (2,1)
+	
+	(4,3) node[nfet] (mos) {}
+	(mos.G) to [short,-o] (2,3)
+	(mos.D) to (4,4) to [R, l_=$R_D$] (4, 6)
+	(4,6) to [battery2, l_=$V_{DC}$] (4,7)
+	(4,7) node[eground, anchor=north, rotate=180]{}
+	(mos.S) to [short] (4,1)% to [short, -o](2,0)  node[anchor=west] {S}
+	(mos.S) -- (mos.B) %source to bulk connection	
+
+;\end{circuitikz}
+\end{center}
+
+\begin{minted}{latex}
+	\begin{circuitikz}[scale=1]\draw
+		(2,1) to [short,o-*] (4,1)
+		(4,1) node[eground]{}
+		
+		(2,3) to [open, v_<=$V_{in}$]  (2,1)
+		
+		(4,3) node[nfet] (mos) {}
+		(mos.G) to [short,-o] (2,3)
+		(mos.D) to (4,4) to [R, l_=$R_D$] (4, 6)
+		(4,6) to [battery2, l_=$V_{DC}$] (4,7)
+		(4,7) node[eground, anchor=north, rotate=180]{}
+		(mos.S) to [short] (4,1)% to [short, -o](2,0)  node[anchor=west] {S}
+		(mos.S) -- (mos.B) %source to bulk connection	
+
+	;\end{circuitikz}
+\end{minted}
+
+
 \subsection{Common source simple with $v_{out}$}
 
 \begin{center}
